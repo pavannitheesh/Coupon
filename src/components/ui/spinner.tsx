@@ -152,7 +152,7 @@ const Bars = ({ size = 24, ...props }: SpinnerVariantProps) => (
     width={size}
     height={size}
     viewBox="0 0 24 24"
-    color='white'
+    color={props.color||'white'}
     {...props}
   >
     <title>Loading...</title>

@@ -1,5 +1,5 @@
 import { Copy } from "lucide-react"
-
+import axios from "axios";
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label"
 import  {ButtonNeon}  from "./ui/neon-button"
 import { useState } from "react"
 import { Spinner } from "./ui/spinner"
+import { toast } from "sonner"
 export function DialogCloseButton() {
 
     const [coupon, setCoupon] = useState(null);
@@ -39,10 +40,16 @@ export function DialogCloseButton() {
             {},
             { withCredentials: true }
           );
+          if(response.status !== 200){
+            toast.error(response.data.message);
+          }
+          else{
     
           setCoupon(response.data.coupon);
+          toast.success(response.data.message);
+          }
         } catch (err) {
-          setError(err.response?.data?.error || "Something went wrong.");
+          toast.error(err.response?.data?.error );
         } finally {
           setLoading(false);
         }
@@ -58,17 +65,22 @@ export function DialogCloseButton() {
                
          
       </DialogTrigger>
+      {loading ? <div key="default" className="flex flex-col items-center justify-center gap-4">
+                <Spinner key="default" variant="bars" />
+              </div> : coupon==null ?<></>:
       <DialogContent className="dark sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Coupon Details</DialogTitle>
-          <DialogDescription>
-            Anyone who has this link will be able to view this.
-          </DialogDescription>
         </DialogHeader>
-        {loading ? <div key="default" className="flex flex-col items-center justify-center gap-4">
-                <Spinner key="default" variant="bars" />
-              </div> :
+        <div>
+       
+          <p className="text-white text-lg">$ {coupon.discount_amount}</p>
+          <p className="text-neutral-300 mt-2 "> {coupon.description}</p>
+
+        </div>
+       
         <div className="flex items-center space-x-2">
+
           <div className="grid flex-1 gap-2">
             <Label htmlFor="link" className="sr-only">
               Code
@@ -76,7 +88,7 @@ export function DialogCloseButton() {
             <Input
               id="link"
               defaultValue="ABCDEF"
-              readOnly
+              readOnly value={coupon.code}
             />
           </div>
           <Button type="submit" size="sm" className="px-3" onClick={myFunction}>
@@ -84,7 +96,7 @@ export function DialogCloseButton() {
             <Copy />
           </Button>
         </div>
-}
+
         <DialogFooter className="sm:justify-start">
           <DialogClose asChild>
             <Button type="button" variant="secondary">
@@ -93,6 +105,7 @@ export function DialogCloseButton() {
           </DialogClose>
         </DialogFooter>
       </DialogContent>
+}
     </Dialog>
   )
 }
