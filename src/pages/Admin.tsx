@@ -1,26 +1,28 @@
-import { NavBarDemo } from "@/components/ui/navbar-demo";
+import { Button } from "@/components/ui/button";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useNavigate } from 'react-router-dom';
+import { toast } from "sonner";
 
 const Admin = () => {
+  const navigate=useNavigate()
   const [availableCoupons, setAvailableCoupons] = useState([]);
   const [claimedCoupons, setClaimedCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   useEffect(() => {
-    const fetchCoupons = async (req,res) => {
+    const fetchCoupons = async (
+    ) => {
       try {
-       const response=  await axios.get("http://localhost:3003/api/admin/coupons", {
-          headers: {
-            Cookie: req.headers.cookie, 
-            // passing the client's cookies to the external server
-          },
-        })
+       const response=  await axios.get("http://localhost:3003/api/admin/coupons",
+      
+         { withCredentials: true }
+        )
         console.log(response);
         setAvailableCoupons(response.data.available_coupons);
         setClaimedCoupons(response.data.claimed_coupons);
       } catch (err) {
-        setError(err);
+        setError(err?.data?.message);
       } finally {
         setLoading(false);
       }
@@ -28,50 +30,35 @@ const Admin = () => {
 
     fetchCoupons();
   }, []);
+  const handleLogout=async ()=>{
+    try {
+      const response=  await axios.post("http://localhost:3003/api/admin/logout",
+     {},
+        { withCredentials: true }
+       )
+       console.log(response);
+       toast.success(response.data.message);
+       navigate('/login');
+    
+     } catch (err) {
+     toast.error(err?.message);
+     } finally {
+       setLoading(false);
+     }
+  }
   return (
-    <div className="dark bg-black min-h-screen">
-     <NavBarDemo/>
-
-     <div className="coupon-container text-white">
-      <h2>All Coupons</h2>
-
-     {loading && <p>Loading coupons...</p>}
-     {/* {error && <p className="error">{error}</p>} */}
-
-      {!loading && !error && (
-        <>
-         <div>
-      <h2>Available Coupons</h2>
-      {availableCoupons.length > 0 ? (
-        <ul>
-          {availableCoupons.map((coupon) => (
-            <li key={coupon.id}>
-              <strong>{coupon.code}</strong> - {coupon.discount_amount} off ({coupon.description})
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No available coupons.</p>
-      )}
-
-      <h2>Claimed Coupons</h2>
-      {claimedCoupons.length > 0 ? (
-        <ul>
-          {claimedCoupons.map((coupon) => (
-            <li key={coupon.id}>
-              <strong>{coupon.code}</strong> - {coupon.discount_amount} off ({coupon.description})
-              <br />
-              Claimed on: {new Date(coupon.claimed_at).toLocaleString()} (IP: {coupon.ip_address})
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No coupons have been claimed yet.</p>
-      )}
-    </div>
-        </>
-      )}
-    </div>
+    <div className="dark bg-neutral-800 min-h-screen">
+      <nav className="flex justify-between text-2xl text-white p-4 bg-neutral-900 shadow-2xl">
+        <div className="text-3xl font-semibold">Coupon Takeaway</div>
+        <div className="flex space-x-20 cursor-pointer">
+          <div>Available Coupons</div>
+          <div>Claimed Coupons</div>
+        </div>
+        <div>
+          <Button onClick={handleLogout} className="cursor-pointer" >Logout</Button>
+        </div>
+      </nav>
+    
     </div>
   )
 }
