@@ -13,14 +13,15 @@ function App() {
   return (
     <>
      <Toaster position="top-center" richColors/>
-   {/* <DemoHeroGeometric/> */}
+ 
    {/* <DialogCloseButton/> */}
    <BrowserRouter>
       <Routes>
         
+        <Route path="/" element={ <DemoHeroGeometric/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/admin/*" element={<Admin/>} />
-        {/* <Route path="*" element={<Navigate to="/login" />} /> */}
+        <Route path="*" element={<Navigate to="/login" />} />
        
         </Routes>
         </BrowserRouter>

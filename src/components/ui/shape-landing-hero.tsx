@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import { DialogCloseButton } from "../Dialog";
+import { ButtonNeon } from "./neon-button";
+import { useNavigate } from "react-router-dom";
 
 
 function ElegantShape({
@@ -22,6 +24,7 @@ function ElegantShape({
     rotate?: number;
     gradient?: string;
 }) {
+  
     return (
         <motion.div
             initial={{
@@ -75,8 +78,8 @@ function ElegantShape({
 
 function HeroGeometric({
   
-    title1 = "Elevate Your Digital Vision",
-    title2 = "Crafting Exceptional Websites",
+    title1 = "Coupon Takeaway",
+    title2 = "Round-Robin Coupon Distribution System",
 }: {
   
     title1?: string;
@@ -94,6 +97,7 @@ function HeroGeometric({
             },
         }),
     };
+    const navigate=useNavigate();
 
     return (
         <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#030303]">
@@ -157,16 +161,16 @@ function HeroGeometric({
                         animate="visible"
                     >
                         <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold mb-6 md:mb-8 tracking-tight">
-                            <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80">
+                            {/* <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-white/80">
                                 {title1}
-                            </span>
+                            </span> */}
                             <br />
                             <span
                                 className={cn(
                                     "bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 via-white/90 to-rose-300 "
                                 )}
                             >
-                                {title2}
+                                {title1}
                             </span>
                         </h1>
                     </motion.div>
@@ -178,12 +182,14 @@ function HeroGeometric({
                         animate="visible"
                     >
                         <p className="text-base sm:text-lg md:text-xl text-white/40 mb-8 leading-relaxed font-light tracking-wide max-w-xl mx-auto px-4">
-                            Crafting exceptional digital experiences through
-                            innovative design and cutting-edge technology.
+                        Round-Robin Coupon Distribution System
                         </p>
                     </motion.div>
                 </div>
-               < DialogCloseButton/>
+               < DialogCloseButton/> 
+               <div className="flex items-center mt-8">
+               <ButtonNeon onClick={()=>navigate('/login')}>Login</ButtonNeon>
+               </div>
             </div>
 
             <div className="absolute inset-0 bg-gradient-to-t from-[#030303] via-transparent to-[#030303]/80 pointer-events-none" />

@@ -1,54 +1,98 @@
-# React + TypeScript + Vite
+# 🎟️ Coupon Distribution System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📖 Overview  
+This is a **Round-Robin Coupon Distribution System** with an **Admin Panel**.  
+It ensures fair coupon distribution while preventing abuse using **IP tracking and session cookies**.  
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Tech Stack  
 
-## Expanding the ESLint configuration
+### 🖥 Backend  
+- **Node.js & Express.js** – REST API development  
+- **PostgreSQL** – Database for storing coupons, claims, and admin users  
+- **JWT Authentication** – Secure admin access  
+- **Rate Limiting (express-rate-limit)** – Prevent abuse  
+- **bcrypt** – Secure password hashing  
+- **cookie-parser** – Handle session cookies  
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🌍 Frontend  
+- **React.js** – User Interface  
+- **Axios** – API calls  
+- **React Router** – Client-side routing  
+- **tailwindcss** – UI styling  
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+---
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🛠 Features  
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 🔹 Admin Features  
+✅ **Admin Login & Logout** – Secure access via JWT authentication  
+✅ **Add New Coupons** – Dynamically create discount codes  
+✅ **View All Coupons** – See available & claimed coupons  
+✅ **Update Coupons** – Modify coupon details  
+✅ **Security Measures** – JWT, bcrypt password hashing  
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+### 🔹 User Features  
+✅ **Claim a Coupon** – Users can claim 1 coupon per 24 hours  
+✅ **IP Address Tracking** – Ensures fair distribution  
+✅ **Session Cookies** – Prevent multiple claims per session  
+
+---
+
+## 🔑 Test Admin Credentials  
+- **Username:** `admin`  
+- **Password:** `admin123`  
+
+_(Change these after first login for security.)_  
+
+---
+### 📌 How to Use
+### ➡️ Admin Panel
+- Login as admin using the test credentials.
+- Add new coupons from the dashboard.
+- Monitor claimed coupons via the admin panel.
+### ➡️ Claiming a Coupon
+- Visit the /claim-coupon page.
+- Click "Claim Coupon" (Allowed once per session & IP per day).
+- Get your discount code! 🎉
+## 📡 API Endpoints  
+
+### 🔐 Admin Routes  
+
+| Method | Endpoint | Description | Authentication |
+|--------|----------|-------------|---------------|
+| **POST** | `/api/admin/login` | Admin login | ❌ No (public) |
+| **POST** | `/api/admin/logout` | Admin logout | ✅ Yes (JWT) |
+| **GET** | `/api/admin/coupons` | Fetch all coupons | ✅ Yes (JWT) |
+| **POST** | `/api/admin/add-coupon` | Add a new coupon | ✅ Yes (JWT) |
+| **PUT** | `/api/admin/update-coupon/:id` | Update coupon details | ✅ Yes (JWT) |
+
+---
+
+### 🌍 Public Routes  
+
+| Method | Endpoint | Description | Protection |
+|--------|----------|-------------|------------|
+| **GET** | `/api/all-coupons` | Get all available & claimed coupons | ❌ No |
+| **POST** | `/api/claim-coupon` | Claim a coupon | ✅ Yes (IP & Cookie Restriction) |
+
+---
+
+## 🛡 Security Features  
+
+### 🔹 IP Address Tracking  
+- Each coupon claim **stores the user's IP address** in the database.  
+- Users **can claim only 1 coupon per 24 hours per IP.**  
+
+### 🔹 Session Cookie Enforcement  
+- A **session cookie (`claimed`)** is set when a user claims a coupon.  
+- If the user refreshes and tries to claim again, the API **denies** the request.  
+
+```javascript
+const checkSessionCookie = (req, res, next) => {
+    if (req.cookies.claimed) {
+        return res.status(429).json({ message: "You've already claimed a coupon in this session." });
+    }
+    next();
+};
