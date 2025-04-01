@@ -66,7 +66,7 @@ const CreditCard = React.forwardRef<HTMLDivElement, CreditCardProps>(
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: INITIAL_DELAY, duration: CARD_ANIMATION_DURATION }}
             >
-              {/* {amount} */}
+           {/* Coupon */}
             </motion.div>
 
             <motion.button

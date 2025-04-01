@@ -49,6 +49,8 @@ const Admin = () => {
        setLoading(false);
      }
   }
+
+
   return (
     <div className="dark bg-neutral-800 min-h-screen">
       <nav className="flex justify-between text-2xl text-white p-4 bg-neutral-900 shadow-2xl">
@@ -58,36 +60,33 @@ const Admin = () => {
           <div onClick={()=>setActive(true)}>Claimed Coupons</div>
         </div>
         <div>
+          <Button  className="cursor-pointer mr-4" >Add Coupon</Button>
           <Button onClick={handleLogout} className="cursor-pointer" >Logout</Button>
         </div>
       </nav>
       <div className="flex items-center justify-center mt-5">
-      <div className="grid grid-cols-3 gap-10">
-     {!active ?   availableCoupons.length==0 ? <div className="text-3xl font-semibold text-white">No coupons are avaialble</div> : availableCoupons.map(c => (
-      <CreditCard key={c.id}
-      couponCode={c.code}
-      cardHolder={c.description}
-      expiryDate={c.discount_amount}
-      />
-    ))
-  
-   : claimedCoupons.length==0 ? <div className="text-3xl font-semibold text-white">No coupons are claimed</div> : claimedCoupons.map(c => (
-      <CreditCard key={c.id}
-      variant="dark"
-      couponCode={c.code}
-      cardHolder={c.description}
-      expiryDate={c.discount_amount}
-      />
-    ))
-  }
-  
+          <div className="grid grid-cols-3 gap-10">
+        {!active ?   availableCoupons.length==0 ? <div className="text-3xl font-semibold text-white">No coupons are avaialble</div> : availableCoupons.map(c => (
+          <CreditCard key={c.id}
+          couponCode={c.code}
+          cardHolder={c.description}
+          expiryDate={c.discount_amount}
+          />
+        ))
+      
+      : claimedCoupons.length==0 ? <div className="text-3xl font-semibold text-white">No coupons are claimed</div> : claimedCoupons.map(c => (
+          <CreditCard key={c.id}
+          variant="dark"
+          couponCode={c.code}
+          cardHolder={c.description}
+          expiryDate={c.discount_amount}
+          />
+        ))
+      }
+      
+        </div>
+        <AddModal/>
     </div>
-    </div>
-    {/* <CreditCard
-      couponCode="4111 1111 1111 9743"
-      cardHolder="John Doe"
-      expiryDate={availableCoupons[0].discount_amount}
-    /> */}
    
     
     </div>
