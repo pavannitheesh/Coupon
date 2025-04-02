@@ -188,7 +188,7 @@ function HeroGeometric({
                 </div>
                < DialogCloseButton/> 
                <div className="flex items-center mt-8">
-               <ButtonNeon onClick={()=>navigate('/login')}>Login</ButtonNeon>
+               <ButtonNeon  onClick={()=>navigate('/login')}>Login</ButtonNeon>
                </div>
             </div>
 
