@@ -1,4 +1,5 @@
 import AddModal from "@/components/AddModal";
+import DetailModal from "@/components/DetailModal";
 import { Button } from "@/components/ui/button";
 import { CreditCard } from "@/components/ui/credit-card";
 import axios from "axios";
@@ -17,6 +18,7 @@ const Admin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState("add");
   const [selectedCoupon, setSelectedCoupon] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const fetchCoupons = async () => {
     try {
       const response = await axios.get("http://localhost:3003/api/admin/coupons", { withCredentials: true });
@@ -72,7 +74,10 @@ const Admin = () => {
                 <div key={c.id} className="relative">
                   <CreditCard
                     data={c}
-                   
+                    onCardClick={() => {
+                      setSelectedCoupon(c);
+                      setIsDetailModalOpen(true);
+                    }}
                   />
                  
                   <Pencil 
@@ -89,6 +94,10 @@ const Admin = () => {
                   <CreditCard
                     data={c}
                     variant="dark"
+                    onCardClick={() => {
+                      setSelectedCoupon(c);
+                      setIsDetailModalOpen(true);
+                    }}
                   />
                  
                   <Pencil 
@@ -107,6 +116,16 @@ const Admin = () => {
           initialData={selectedCoupon}
           fetchCoupons={fetchCoupons} 
         />
+        {selectedCoupon && (
+          <DetailModal
+            isOpen={isDetailModalOpen}
+            onClose={() => {
+              setIsDetailModalOpen(false);
+              setSelectedCoupon(null);
+            }}
+            data={selectedCoupon}
+          />
+        )}
       </div>
     </div>
   );

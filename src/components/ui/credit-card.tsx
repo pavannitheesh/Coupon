@@ -22,14 +22,19 @@ interface CreditCardProps extends React.HTMLAttributes<HTMLDivElement> {
   data:{
     code: string,
     description: string,
-    discount_amount: string
+    discount_amount: string,
+    is_claimed?: boolean,
+    created_at?: string,
+    updated_at?: string,
+    ip_address?: string,
+    claimed_at?: string
   }
   variant?: "default" | "dark",
- 
+  onCardClick?: () => void
 }
 
 const CreditCard = React.forwardRef<HTMLDivElement, CreditCardProps>(
-  ({ className,data, variant = "default", ...props }, ref) => {
+  ({ className, data, variant = "default", onCardClick, ...props }, ref) => {
     const [isVisible, setIsVisible] = React.useState(false)
 const { code, description, discount_amount:amount}=data;
     const getMaskedNumber = (number: string) => {
@@ -53,7 +58,8 @@ const { code, description, discount_amount:amount}=data;
         variants={fadeInVariants}
         transition={{ duration: CARD_ANIMATION_DURATION }}
         style={{ perspective: PERSPECTIVE }}
-        className={cn("relative touch-none", className)}
+        className={cn("relative touch-none cursor-pointer", className)}
+       
         {...props}
       >
         <motion.div
@@ -96,6 +102,7 @@ const { code, description, discount_amount:amount}=data;
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
+            onClick={onCardClick}
           >
             {isVisible ? code : getMaskedNumber(code)}
           </motion.div>
