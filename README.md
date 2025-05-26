@@ -88,11 +88,3 @@ _(Change these after first login for security.)_
 ### 🔹 Session Cookie Enforcement  
 - A **session cookie (`claimed`)** is set when a user claims a coupon.  
 - If the user refreshes and tries to claim again, the API **denies** the request.  
-
-```javascript
-const checkSessionCookie = (req, res, next) => {
-    if (req.cookies.claimed) {
-        return res.status(429).json({ message: "You've already claimed a coupon in this session." });
-    }
-    next();
-};
